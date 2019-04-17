@@ -11,6 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
+ /*
+ Laravel mix implementado
+ */
+
 mix.styles([
    'resources/assets/plantilla/css/font-awesome.min.css',
    'resources/assets/plantilla/css/simple-line-icons.min.css',
