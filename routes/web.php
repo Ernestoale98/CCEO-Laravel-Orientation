@@ -1,4 +1,5 @@
 <?php
+use App\Categoria;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,3 +15,12 @@
 Route::get('/', function () {
     return view('contenido/contenido');
 });
+
+/*
+Metodos para categorias
+*/
+Route::get('/categoria','CategoriaController@index');
+Route::post('/categoria/registrar','CategoriaController@store');
+Route::put('/categoria/actualizar','CategoriaController@update');
+Route::put('/categoria/desactivar','Categoria@desactivar');
+Route::put('/categoria/activar','Categoria@activar');
