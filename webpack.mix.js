@@ -12,7 +12,7 @@ const mix = require('laravel-mix');
  */
 
  /*
- Laravel mix implementado
+Laravel mix implementado
  */
 
 mix.styles([
