@@ -57,14 +57,29 @@
                 <td>
                   <button
                     type="button"
-                    @click="abriModal('categoria','actualizar',categoria)"
+                    @click="abrirModal('categoria','actualizar',categoria)"
                     class="btn btn-warning btn-sm"
                   >
                     <i class="icon-pencil"></i>
                   </button> &nbsp;
-                  <button type="button" class="btn btn-danger btn-sm">
-                    <i class="icon-trash"></i>
-                  </button>
+                  <template v-if="categoria.condicion">
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      @click="desactivarCategoria(categoria.id)"
+                    >
+                      <i class="icon-trash"></i>
+                    </button>
+                  </template>
+                  <template v-else>
+                    <button
+                      type="button"
+                      class="btn btn-info btn-sm"
+                      @click="activarCategoria(categoria.id)"
+                    >
+                      <i class="icon-check"></i>
+                    </button>
+                  </template>
                 </td>
                 <td v-text="categoria.nombre"></td>
                 <td v-text="categoria.descripcion"></td>
@@ -134,7 +149,6 @@
                     class="form-control"
                     placeholder="Nombre de categoría"
                   >
-                  <span class="help-block">(*) Ingrese el nombre de la categoría</span>
                 </div>
               </div>
               <div class="form-group row">
@@ -144,16 +158,31 @@
                     type="email"
                     v-model="descripcion"
                     class="form-control"
-                    placeholder="Enter Email"
+                    placeholder="Ingrese descripcion"
                   >
+                </div>
+              </div>
+              <div v-show="errorCategoria" class="form-group row div-error">
+                <div class="text-center text-error">
+                  <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error"></div>
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button type="button" v-if="tipoAccion==1" class="btn btn-primary">Guardar</button>
-            <button type="button" v-if="tipoAccion==2" class="btn btn-primary">Actualizar</button>
+            <button
+              type="button"
+              v-if="tipoAccion==1"
+              @click="registrarCategoria"
+              class="btn btn-primary"
+            >Guardar</button>
+            <button
+              type="button"
+              v-if="tipoAccion==2"
+              @click="actualizarCategoria()"
+              class="btn btn-primary"
+            >Actualizar</button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -161,37 +190,6 @@
       <!-- /.modal-dialog -->
     </div>
     <!--Fin del modal-->
-    <!-- Inicio del modal Eliminar -->
-    <div
-      class="modal fade"
-      id="modalEliminar"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="myModalLabel"
-      style="display: none;"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-danger" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Eliminar Categoría</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Estas seguro de eliminar la categoría?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-danger">Eliminar</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- Fin del modal Eliminar -->
   </main>
   <!-- /Fin del contenido principal -->
 </template>
@@ -200,12 +198,15 @@
 export default {
   data() {
     return {
+      categoria_id: 0,
       nombre: "",
       descripcion: "",
       arrayCategoria: [],
       modal: 0,
       tituloModal: "",
-      tipoAccion: 0
+      tipoAccion: 0,
+      errorCategoria: 0,
+      errorMostrarMsjCategoria: []
     };
   },
   methods: {
@@ -222,7 +223,146 @@ export default {
           console.log(error);
         });
     },
-    registrarCategoria() {},
+    registrarCategoria() {
+      if (this.validarCategoria()) {
+        return;
+      }
+
+      let me = this;
+      axios
+        .post("/categoria/registrar", {
+          nombre: this.nombre,
+          descripcion: this.descripcion
+        })
+        .then(function(response) {
+          me.cerrarModal();
+          me.listarCategoria();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    validarCategoria() {
+      this.errorCategoria = 0;
+      this.errorMostrarMsjCategoria = [];
+
+      if (!this.nombre)
+        this.errorMostrarMsjCategoria.push(
+          "El nombre de la categoria no puede estar vacio"
+        );
+
+      if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
+
+      return this.errorCategoria;
+    },
+    activarCategoria(id) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+      swalWithBootstrapButtons
+        .fire({
+          title: "Estas seguro de activarlo?",
+          text: "",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Si,activar!",
+          cancelButtonText: "No, cancelar!",
+          reverseButtons: true
+        })
+        .then(result => {
+          if (result.value) {
+            let me = this;
+            axios
+              .put("/categoria/activar", {
+                id: id
+              })
+              .then(function(response) {
+                me.listarCategoria();
+                swalWithBootstrapButtons.fire(
+                  "Activado!",
+                  "El regristro esta activado!",
+                  "success"
+                );
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          } else if (
+            // Read more about handling dismissals
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire("Cancelled", "", "error");
+          }
+        });
+    },
+    desactivarCategoria(id) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+      swalWithBootstrapButtons
+        .fire({
+          title: "Estas seguro?",
+          text: "",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Si,desactivar!",
+          cancelButtonText: "No, cancelar!",
+          reverseButtons: true
+        })
+        .then(result => {
+          if (result.value) {
+            let me = this;
+            axios
+              .put("/categoria/desactivar", {
+                id: id
+              })
+              .then(function(response) {
+                me.listarCategoria();
+                swalWithBootstrapButtons.fire(
+                  "Desactivado!",
+                  "El registro se a desactivado!",
+                  "success"
+                );
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          } else if (
+            // Read more about handling dismissals
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire("Cancelled", "", "error");
+          }
+        });
+    },
+    actualizarCategoria() {
+      if (this.validarCategoria()) {
+        return;
+      }
+
+      let me = this;
+      axios
+        .put("/categoria/actualizar", {
+          nombre: this.nombre,
+          descripcion: this.descripcion,
+          id: this.categoria_id
+        })
+        .then(function(response) {
+          me.cerrarModal();
+          me.listarCategoria();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     abrirModal(modelo, accion, data = []) {
       switch (modelo) {
         case "categoria": {
@@ -236,6 +376,13 @@ export default {
               break;
             }
             case "actualizar": {
+              this.modal = 1;
+              this.tituloModal = "Actualizar categoria";
+              this.tipoAccion = 2;
+              this.categoria_id = data["id"];
+              this.nombre = data["nombre"];
+              this.descripcion = data["descripcion"];
+              break;
             }
           }
         }
@@ -264,6 +411,14 @@ export default {
   opacity: 1 !important;
   position: absolute !important;
   background-color: #3c29297a !important;
+}
+.div-error {
+  display: flex;
+  justify-content: center;
+}
+.text-error {
+  color: red;
+  font-weight: bold;
 }
 </style>
 
