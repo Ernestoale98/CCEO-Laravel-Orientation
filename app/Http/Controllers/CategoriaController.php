@@ -1,5 +1,13 @@
 <?php
 
+/**
+ *
+ * @category  Categories
+ * @version   1.0
+ * @since     2019-24-04
+ * @author    Ernesto <ernesto.munoz@cceo.com.mx>
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -18,20 +26,14 @@ class CategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
-
+        if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-
         if ($buscar == '') {
             $categorias = Categoria::orderBy('id', 'desc')->paginate(3);
         } else {
-            $categorias = Categoria::where($criterio,'like','%'. $buscar . '%')->paginate(3);
-         }
-
-        //Esta si funciona
-        //$categorias = Categoria::paginate(3);
-
+            $categorias = Categoria::where($criterio, 'like', '%' . $buscar . '%')->paginate(3);
+        }
         return [
             'pagination' => [
                 'total'             => $categorias->total(),
@@ -45,6 +47,15 @@ class CategoriaController extends Controller
         ];
     }
 
+    public function selectCategoria(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $categorias = Categoria::where('condicion', '=', '1')
+            ->select('id', 'nombre')
+            ->orderBy('nombre', 'asc')
+            ->get();
+        return ['categorias' => $categorias];
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -56,8 +67,7 @@ class CategoriaController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $categoria = new Categoria();
-        $categoria->nombre = $request->nombre;
-        $categoria->descripcion = $request->descripcion;
+        $categoria->fill($request->all());
         $categoria->condicion = '1';
         $categoria->save();
     }
@@ -74,8 +84,7 @@ class CategoriaController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $categoria = Categoria::findOrFail($request->id);
-        $categoria->nombre = $request->nombre;
-        $categoria->descripcion = $request->descripcion;
+        $categoria->fill($request->all());
         $categoria->condicion = '1';
         $categoria->save();
     }

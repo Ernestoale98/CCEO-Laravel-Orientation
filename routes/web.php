@@ -1,5 +1,7 @@
 <?php
 use App\Categoria;
+//use Symfony\Component\Routing\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,13 @@ Route::post('/categoria/registrar','CategoriaController@store');
 Route::put('/categoria/actualizar','CategoriaController@update');
 Route::put('/categoria/desactivar','CategoriaController@desactivar');
 Route::put('/categoria/activar','CategoriaController@activar');
+Route::get('/categoria/selectCategoria','CategoriaController@selectCategoria');
+
+/*
+Metodos para articulos
+*/
+Route::get('/articulo','ArticuloController@index');
+Route::post('/articulo/registrar','ArticuloController@store');
+Route::put('/articulo/actualizar','ArticuloController@update');
+Route::put('/articulo/desactivar','ArticuloController@desactivar');
+Route::put('/articulo/activar','ArticuloController@activar');

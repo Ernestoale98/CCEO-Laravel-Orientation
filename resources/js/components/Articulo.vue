@@ -11,10 +11,10 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Categorías
+          <i class="fa fa-align-justify"></i> Articulos
           <button
             type="button"
-            @click="abrirModal('categoria','registrar')"
+            @click="abrirModal('articulo','registrar')"
             class="btn btn-secondary"
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
@@ -30,14 +30,14 @@
                 </select>
                 <input
                   v-model="buscar"
-                  @keyup.enter="listarCategoria(1,buscar,criterio)"
+                  @keyup.enter="listarArticulo(1,buscar,criterio)"
                   type="text"
                   class="form-control"
                   placeholder="Texto a buscar"
                 >
                 <button
                   type="submit"
-                  @click="listarCategoria(1,buscar,criterio)"
+                  @click="listarArticulo(1,buscar,criterio)"
                   class="btn btn-primary"
                 >
                   <i class="fa fa-search"></i> Buscar
@@ -49,26 +49,30 @@
             <thead>
               <tr>
                 <th>Opciones</th>
+                <th>Codigo</th>
                 <th>Nombre</th>
+                <th>Categoria</th>
+                <th>Precio Venta</th>
+                <th>Stock</th>
                 <th>Descripción</th>
                 <th>Estado</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="categoria in arrayCategoria" :key="categoria.id">
+              <tr v-for="articulo in arrayArticulo" :key="articulo.id">
                 <td>
                   <button
                     type="button"
-                    @click="abrirModal('categoria','actualizar',categoria)"
+                    @click="abrirModal('articulo','actualizar',articulo)"
                     class="btn btn-warning btn-sm"
                   >
                     <i class="icon-pencil"></i>
                   </button> &nbsp;
-                  <template v-if="categoria.condicion">
+                  <template v-if="articulo.condicion">
                     <button
                       type="button"
                       class="btn btn-danger btn-sm"
-                      @click="desactivarCategoria(categoria.id)"
+                      @click="desactivarCategoria(articulo.id)"
                     >
                       <i class="icon-trash"></i>
                     </button>
@@ -77,16 +81,20 @@
                     <button
                       type="button"
                       class="btn btn-info btn-sm"
-                      @click="activarCategoria(categoria.id)"
+                      @click="activarCategoria(articulo.id)"
                     >
                       <i class="icon-check"></i>
                     </button>
                   </template>
                 </td>
-                <td v-text="categoria.nombre"></td>
-                <td v-text="categoria.descripcion"></td>
+                <td v-text="articulo.codigo"></td>
+                <td v-text="articulo.nombre"></td>
+                <td v-text="articulo.nombre_categoria"></td>
+                <td v-text="articulo.precio_venta"></td>
+                <td v-text="articulo.stock"></td>
+                <td v-text="articulo.descripcion"></td>
                 <td>
-                  <div v-if="categoria.condicion">
+                  <div v-if="articulo.condicion">
                     <span class="badge badge-success">Activo</span>
                   </div>
                   <div v-else>
@@ -152,14 +160,51 @@
           <div class="modal-body">
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <div class="form-group row">
-                <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
+                <label class="col-md-3 form-control-label" for="text-input">Categoria</label>
+                <div class="col-md-9">
+                  <select class="form-control" v-model="id_categoria">
+                    <option value="0">Seleccione</option>
+                    <option
+                      v-for="categoria in arrayCategoria"
+                      :key="categoria.id"
+                      :value="categoria.id"
+                      v-text="categoria.nombre"
+                    ></option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 form-control-label">Codigo</label>
+                <div class="col-md-9">
+                  <input
+                    type="text"
+                    v-model="codigo"
+                    class="form-control"
+                    placeholder="Ingrese el codigo de barras"
+                  >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 form-control-label">Nombre de Articulo</label>
                 <div class="col-md-9">
                   <input
                     type="text"
                     v-model="nombre"
                     class="form-control"
-                    placeholder="Nombre de categoría"
+                    placeholder="Ingrese el nombre del articulo"
                   >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 form-control-label">Precio</label>
+                <div class="col-md-9">
+                  <input type="number" v-model="precio_venta" class="form-control" placeholder="$">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 form-control-label">Stock</label>
+                <div class="col-md-9">
+                  <input type="number" v-model="stock" class="form-control" placeholder>
                 </div>
               </div>
               <div class="form-group row">
@@ -173,9 +218,9 @@
                   >
                 </div>
               </div>
-              <div v-show="errorCategoria" class="form-group row div-error">
+              <div v-show="errorArticulo" class="form-group row div-error">
                 <div class="text-center text-error">
-                  <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error"></div>
+                  <div v-for="error in errorMostrarMsjArticulo" :key="error" v-text="error"></div>
                 </div>
               </div>
             </form>
@@ -185,13 +230,13 @@
             <button
               type="button"
               v-if="tipoAccion==1"
-              @click="registrarCategoria"
+              @click="registrarArticulo()"
               class="btn btn-primary"
             >Guardar</button>
             <button
               type="button"
               v-if="tipoAccion==2"
-              @click="actualizarCategoria()"
+              @click="actualizarArticulo()"
               class="btn btn-primary"
             >Actualizar</button>
           </div>
@@ -209,15 +254,20 @@
 export default {
   data() {
     return {
-      categoria_id: 0,
+      articulo_id: 0,
+      id_categoria: 0,
+      nombre_categoria: "",
+      codigo: "",
       nombre: "",
+      precio_venta: "",
+      stock: 0,
       descripcion: "",
-      arrayCategoria: [],
+      arrayArticulo: [],
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
-      errorCategoria: 0,
-      errorMostrarMsjCategoria: [],
+      errorArticulo: 0,
+      errorMostrarMsjArticulo: [],
       pagination: {
         total: 0,
         current_page: 0,
@@ -228,7 +278,8 @@ export default {
       },
       offset: 3,
       criterio: "nombre",
-      buscar: ""
+      buscar: "",
+      arrayCategoria: []
     };
   },
   computed: {
@@ -265,12 +316,12 @@ export default {
       //Actualizar pagina actual
       me.pagination.current_page = page;
       //Enviar la peticion para visualizar la data
-      me.listarCategoria(page, buscar, criterio);
+      me.listarArticulo(page, buscar, criterio);
     },
-    listarCategoria(page, buscar, criterio) {
+    listarArticulo(page, buscar, criterio) {
       let me = this;
       var url =
-        "/categoria?page=" +
+        "/articulo?page=" +
         page +
         "&buscar=" +
         buscar +
@@ -281,7 +332,7 @@ export default {
         .then(function(response) {
           // handle success
           var respuesta = response.data;
-          me.arrayCategoria = respuesta.categorias.data;
+          me.arrayArticulo = respuesta.articulos.data;
           me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -302,7 +353,7 @@ export default {
         })
         .then(function(response) {
           me.cerrarModal();
-          me.listarCategoria(1, "", "nombre");
+          me.listarArticulo(1, "", "nombre");
         })
         .catch(function(error) {
           console.log(error);
@@ -347,7 +398,7 @@ export default {
                 id: id
               })
               .then(function(response) {
-                me.listarCategoria(1, "", "nombre");
+                me.listarArticulo(1, "", "nombre");
                 swalWithBootstrapButtons.fire(
                   "Activado!",
                   "El regristro esta activado!",
@@ -391,7 +442,7 @@ export default {
                 id: id
               })
               .then(function(response) {
-                me.listarCategoria(1, "", "nombre");
+                me.listarArticulo(1, "", "nombre");
                 swalWithBootstrapButtons.fire(
                   "Desactivado!",
                   "El registro se a desactivado!",
@@ -423,7 +474,7 @@ export default {
         })
         .then(function(response) {
           me.cerrarModal();
-          me.listarCategoria(1, "", "nombre");
+          me.listarArticulo(1, "", "nombre");
         })
         .catch(function(error) {
           console.log(error);
@@ -431,11 +482,11 @@ export default {
     },
     abrirModal(modelo, accion, data = []) {
       switch (modelo) {
-        case "categoria": {
+        case "articulo": {
           switch (accion) {
             case "registrar": {
               this.modal = 1;
-              this.tituloModal = "Registrar Categoria";
+              this.tituloModal = "Registrar Articulo";
               this.nombre = "";
               this.descripcion = "";
               this.tipoAccion = 1;
@@ -443,7 +494,7 @@ export default {
             }
             case "actualizar": {
               this.modal = 1;
-              this.tituloModal = "Actualizar categoria";
+              this.tituloModal = "Actualizar Articulo";
               this.tipoAccion = 2;
               this.categoria_id = data["id"];
               this.nombre = data["nombre"];
@@ -453,16 +504,38 @@ export default {
           }
         }
       }
+      this.selectCategoria();
     },
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";
-      this.nombre = "";
+      this.id_categoria=0;
+      this.nombre_categoria='';
+      this.codigo='';
+      this.nombre='';
+      this.precio_venta = "";
+      this.stock = "";
       this.descripcion = "";
+      this.errorArticulo=0;
+    },
+    selectCategoria() {
+      let me = this;
+      var url = "/categoria/selectCategoria";
+      axios
+        .get(url)
+        .then(function(response) {
+          // handle success
+          var respuesta = response.data;
+          me.arrayCategoria = respuesta.categorias;
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        });
     }
   },
   mounted() {
-    this.listarCategoria(1, this.buscar, this.criterio);
+    this.listarArticulo(1, this.buscar, this.criterio);
   }
 };
 </script>
