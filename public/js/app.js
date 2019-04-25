@@ -2639,8 +2639,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           var me = _this;
-          axios.put("/categoria/activar", {
-            id: id
+          axios.put("/categoria/activar_desactivar", {
+            id: id,
+            action: 1
           }).then(function (response) {
             me.listarCategoria(1, "", "nombre");
             swalWithBootstrapButtons.fire("Activado!", "El regristro esta activado!", "success");
@@ -2664,7 +2665,7 @@ __webpack_require__.r(__webpack_exports__);
         buttonsStyling: false
       });
       swalWithBootstrapButtons.fire({
-        title: "Estas seguro?",
+        title: "Estas seguro de desactivarlo?",
         text: "",
         type: "warning",
         showCancelButton: true,
@@ -2674,8 +2675,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           var me = _this2;
-          axios.put("/categoria/desactivar", {
-            id: id
+          axios.put("/categoria/activar_desactivar", {
+            id: id,
+            action: '0'
           }).then(function (response) {
             me.listarCategoria(1, "", "nombre");
             swalWithBootstrapButtons.fire("Desactivado!", "El registro se a desactivado!", "success");
