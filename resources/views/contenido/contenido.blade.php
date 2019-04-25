@@ -13,7 +13,7 @@
         <h1>Variable menu es igual a 3 </h1>
     </template>
     <template v-if="menu==4">
-        <h1>Variable menu es igual a 4 </h1>
+        <proveedor></proveedor>
     </template>
     <template v-if="menu==5">
         <h1>Variable menu es igual a 5 </h1>
