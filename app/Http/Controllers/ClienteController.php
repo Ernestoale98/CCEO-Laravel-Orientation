@@ -2,7 +2,7 @@
 
 /**
  *
- * @category  Categories
+ * @category  Customers
  * @version   1.0
  * @since     2019-24-04
  * @author    Ernesto <ernesto.munoz@cceo.com.mx>
