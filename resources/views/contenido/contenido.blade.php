@@ -25,7 +25,7 @@
         <h1>Variable menu es igual a 7 </h1>
     </template>
     <template v-if="menu==8">
-        <h1>Variable menu es igual a 8 </h1>
+        <rol></rol>
     </template>
     <template v-if="menu==9">
         <h1>Variable menu es igual a 9 </h1>
