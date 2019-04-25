@@ -50,3 +50,7 @@ Metodos para proveedores
 Route::get('/proveedor','ProveedorController@index');
 Route::post('/proveedor/registrar','ProveedorController@store');
 Route::put('/proveedor/actualizar','ProveedorController@update');
+/*
+Metodos para roles
+*/
+Route::get('/rol','RolController@index');
