@@ -72,7 +72,7 @@
                     <button
                       type="button"
                       class="btn btn-danger btn-sm"
-                      @click="desactivarCategoria(articulo.id)"
+                      @click="desactivarArticulo(articulo.id)"
                     >
                       <i class="icon-trash"></i>
                     </button>
@@ -81,7 +81,7 @@
                     <button
                       type="button"
                       class="btn btn-info btn-sm"
-                      @click="activarCategoria(articulo.id)"
+                      @click="activarArticulo(articulo.id)"
                     >
                       <i class="icon-check"></i>
                     </button>
@@ -182,6 +182,9 @@
                     class="form-control"
                     placeholder="Ingrese el codigo de barras"
                   >
+                  <barcode :value="codigo" :options="{format:'EAN-13'}">
+                    Generando codigo de barras
+                  </barcode>
                 </div>
               </div>
               <div class="form-group row">
@@ -251,6 +254,7 @@
 </template>
 
 <script>
+import VueBarcode from 'vue-barcode';
 export default {
   data() {
     return {
@@ -281,6 +285,9 @@ export default {
       buscar: "",
       arrayCategoria: []
     };
+  },
+  components: {
+    'barcode': VueBarcode
   },
   computed: {
     isActived: function() {
@@ -379,7 +386,7 @@ export default {
 
       return this.errorArticulo;
     },
-    activarCategoria(id) {
+    activarArticulo(id) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: "btn btn-success",
@@ -401,7 +408,7 @@ export default {
           if (result.value) {
             let me = this;
             axios
-              .put("/categoria/activar", {
+              .put("/articulo/activar", {
                 id: id
               })
               .then(function(response) {
@@ -423,7 +430,7 @@ export default {
           }
         });
     },
-    desactivarCategoria(id) {
+    desactivarArticulo(id) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: "btn btn-success",
@@ -445,7 +452,7 @@ export default {
           if (result.value) {
             let me = this;
             axios
-              .put("/categoria/desactivar", {
+              .put("/articulo/desactivar", {
                 id: id
               })
               .then(function(response) {

@@ -11,6 +11,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+//Importar Paginating Query
+//use Illuminate\Support\Facades\DB;
+//Importar el modelo
 use App\Articulo;
 
 class ArticuloController extends Controller
