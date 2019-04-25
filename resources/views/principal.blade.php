@@ -77,9 +77,6 @@
             @yield('contenido')
             <!-- /Fin del contenido principal -->
         </div>
-        <!-- /Inicio del contenido principal -->
-        @yield('contenido')
-        <!-- /Fin del contenido principal -->
     </div>
     <footer class="app-footer">
         <span><a href="http://www.incanatoit.com/">IncanatoIT</a> &copy; 2017</span>
