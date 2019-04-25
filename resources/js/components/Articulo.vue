@@ -162,7 +162,7 @@
               <div class="form-group row">
                 <label class="col-md-3 form-control-label" for="text-input">Categoria</label>
                 <div class="col-md-9">
-                  <select class="form-control" v-model="id_categoria">
+                  <select class="form-control" v-model="idcategoria">
                     <option value="0">Seleccione</option>
                     <option
                       v-for="categoria in arrayCategoria"
@@ -255,11 +255,11 @@ export default {
   data() {
     return {
       articulo_id: 0,
-      id_categoria: 0,
+      idcategoria: 0,
       nombre_categoria: "",
       codigo: "",
       nombre: "",
-      precio_venta: "",
+      precio_venta: 0,
       stock: 0,
       descripcion: "",
       arrayArticulo: [],
@@ -340,15 +340,18 @@ export default {
           console.log(error);
         });
     },
-    registrarCategoria() {
-      if (this.validarCategoria()) {
+    registrarArticulo() {
+      if (this.validarArticulo()) {
         return;
       }
-
       let me = this;
       axios
-        .post("/categoria/registrar", {
+        .post("/articulo/registrar", {
+          idcategoria : this.idcategoria,
+          codigo: this.codigo,
           nombre: this.nombre,
+          stock: this.stock,
+          precio_venta: this.precio_venta,
           descripcion: this.descripcion
         })
         .then(function(response) {
@@ -359,18 +362,22 @@ export default {
           console.log(error);
         });
     },
-    validarCategoria() {
-      this.errorCategoria = 0;
-      this.errorMostrarMsjCategoria = [];
+    validarArticulo() {
+      this.errorArticulo = 0;
+      this.errorMostrarMsjArticulo = [];
 
       if (!this.nombre)
-        this.errorMostrarMsjCategoria.push(
-          "El nombre de la categoria no puede estar vacio"
-        );
+        this.errorMostrarMsjArticulo.push("El nombre del articulo no puede estar vacio");
+      if (this.idcategoria == 0)
+        this.errorMostrarMsjArticulo.push("Seleccione una categoria");
+      if (!this.stock)
+        this.errorMostrarMsjArticulo.push("Agregue un stock");
+      if (this.precio_venta == 0)
+        this.errorMostrarMsjArticulo.push("El precio venta del articulo debe ser un numero");
 
-      if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
+      if (this.errorMostrarMsjArticulo.length) this.errorArticulo = 1;
 
-      return this.errorCategoria;
+      return this.errorArticulo;
     },
     activarCategoria(id) {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -460,17 +467,20 @@ export default {
           }
         });
     },
-    actualizarCategoria() {
-      if (this.validarCategoria()) {
+    actualizarArticulo() {
+      if (this.validarArticulo()) {
         return;
       }
-
       let me = this;
       axios
-        .put("/categoria/actualizar", {
+        .put("/articulo/actualizar", {
+          idcategoria : this.idcategoria,
+          codigo: this.codigo,
           nombre: this.nombre,
+          stock: this.stock,
+          precio_venta: this.precio_venta,
           descripcion: this.descripcion,
-          id: this.categoria_id
+          id:this.articulo_id
         })
         .then(function(response) {
           me.cerrarModal();
@@ -487,7 +497,12 @@ export default {
             case "registrar": {
               this.modal = 1;
               this.tituloModal = "Registrar Articulo";
-              this.nombre = "";
+              this.idcategoria = 0;
+              this.nombre_categoria = "";
+              this.codigo = '';
+              this.nombre = '';
+              this.precio_venta = 0;
+              this.stock = 0;
               this.descripcion = "";
               this.tipoAccion = 1;
               break;
@@ -496,8 +511,12 @@ export default {
               this.modal = 1;
               this.tituloModal = "Actualizar Articulo";
               this.tipoAccion = 2;
-              this.categoria_id = data["id"];
+              this.articulo_id = data["id"];
+              this.idcategoria = data["idcategoria"];
+              this.codigo = data["codigo"];
               this.nombre = data["nombre"];
+              this.stock = data["stock"];
+              this.precio_venta = data["precio_venta"];
               this.descripcion = data["descripcion"];
               break;
             }
@@ -509,14 +528,14 @@ export default {
     cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";
-      this.id_categoria=0;
-      this.nombre_categoria='';
-      this.codigo='';
-      this.nombre='';
-      this.precio_venta = "";
-      this.stock = "";
+      this.idcategoria = 0;
+      this.nombre_categoria = "";
+      this.codigo = "";
+      this.nombre = "";
+      this.precio_venta = 0;
+      this.stock = 0;
       this.descripcion = "";
-      this.errorArticulo=0;
+      this.errorArticulo = 0;
     },
     selectCategoria() {
       let me = this;
