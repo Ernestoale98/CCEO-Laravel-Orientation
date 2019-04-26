@@ -89,19 +89,16 @@ class CategoriaController extends Controller
         $categoria->save();
     }
 
-    public function desactivar(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/');
-        $categoria = Categoria::findOrFail($request->id);
-        $categoria->condicion = '0';
-        $categoria->save();
-    }
 
-    public function activar(Request $request)
+    public function activar_desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         $categoria = Categoria::findOrFail($request->id);
-        $categoria->condicion = '1';
+        if ($request->action == 0) {
+            $categoria->condicion = '0';
+        } else {
+            $categoria->condicion = '1';
+        }
         $categoria->save();
     }
 }

@@ -343,8 +343,9 @@ export default {
           if (result.value) {
             let me = this;
             axios
-              .put("/categoria/activar", {
-                id: id
+              .put("/categoria/activar_desactivar", {
+                id: id,
+                action:1
               })
               .then(function(response) {
                 me.listarCategoria(1, "", "nombre");
@@ -375,7 +376,7 @@ export default {
       });
       swalWithBootstrapButtons
         .fire({
-          title: "Estas seguro?",
+          title: "Estas seguro de desactivarlo?",
           text: "",
           type: "warning",
           showCancelButton: true,
@@ -387,8 +388,9 @@ export default {
           if (result.value) {
             let me = this;
             axios
-              .put("/categoria/desactivar", {
-                id: id
+              .put("/categoria/activar_desactivar", {
+                id: id,
+                action:'0'
               })
               .then(function(response) {
                 me.listarCategoria(1, "", "nombre");
