@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/articulo/listarArticulo', 'ArticuloController@listarArticulo');
         Route::get('/articulo/buscarArticuloVenta', 'ArticuloController@buscarArticuloVenta');
         Route::get('/articulo/listarArticuloVenta', 'ArticuloController@listarArticuloVenta');
+        Route::get('/articulo/listarPdf', 'ArticuloController@listarPdf')->name('articulos_pdf');
         
         Route::get('/proveedor', 'ProveedorController@index');
         Route::post('/proveedor/registrar', 'ProveedorController@store');
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/venta/desactivar', 'VentaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
+        Route::get('/venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
     });
 
     Route::group(['middleware' => ['Administrador']], function () {
@@ -84,6 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/articulo/listarArticulo', 'ArticuloController@listarArticulo');
         Route::get('/articulo/buscarArticuloVenta', 'ArticuloController@buscarArticuloVenta');
         Route::get('/articulo/listarArticuloVenta', 'ArticuloController@listarArticuloVenta');
+        Route::get('/articulo/listarPdf', 'ArticuloController@listarPdf')->name('articulos_pdf');
 
         Route::get('/proveedor', 'ProveedorController@index');
         Route::post('/proveedor/registrar', 'ProveedorController@store');
@@ -115,6 +118,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/venta/desactivar', 'VentaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
+        Route::get('/venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
     });
 });
  

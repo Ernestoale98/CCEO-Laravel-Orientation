@@ -19,6 +19,13 @@
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+          <button
+            type="button"
+            @click="cargarPdf()"
+            class="btn btn-info"
+          >
+            <i class="icon-doc"></i>&nbsp;Reporte
+          </button>
         </div>
         <div class="card-body">
           <div class="form-group row">
@@ -346,6 +353,9 @@ export default {
           // handle error
           console.log(error);
         });
+    },
+    cargarPdf(){
+      window.open('/articulo/listarPdf','blank');
     },
     registrarArticulo() {
       if (this.validarArticulo()) {

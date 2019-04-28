@@ -49,6 +49,9 @@
                                     <tr v-for="venta in arrayVenta" :key="venta.id">
                                         <td>
                                             <button type="button" @click="verVenta(venta.id)" class="btn btn-success btn-sm">
+                                            <i class="icon-doc"></i>
+                                            </button> &nbsp;
+                                            <button type="button" @click="pdfVenta(venta.id)" class="btn btn-info btn-sm">
                                             <i class="icon-eye"></i>
                                             </button> &nbsp;
                                             <template v-if="venta.estado=='Registrado'">
@@ -513,6 +516,9 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            pdfVenta(id){
+                window.open('/venta/pdf/'+id+','+'_blank');
             },
             selectCliente(search,loading){
                 let me=this;

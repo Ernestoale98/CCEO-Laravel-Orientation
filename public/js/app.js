@@ -2020,6 +2020,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2106,6 +2113,9 @@ __webpack_require__.r(__webpack_exports__);
         // handle error
         console.log(error);
       });
+    },
+    cargarPdf: function cargarPdf() {
+      window.open('/articulo/listarPdf', 'blank');
     },
     registrarArticulo: function registrarArticulo() {
       if (this.validarArticulo()) {
@@ -5523,6 +5533,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -5624,6 +5637,9 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    pdfVenta: function pdfVenta(id) {
+      window.open('/venta/pdf/' + id + ',' + '_blank');
     },
     selectCliente: function selectCliente(search, loading) {
       var me = this;
@@ -46132,6 +46148,20 @@ var render = function() {
               }
             },
             [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n        ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-info",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.cargarPdf()
+                }
+              }
+            },
+            [_c("i", { staticClass: "icon-doc" }), _vm._v(" Reporte\n        ")]
           )
         ]),
         _vm._v(" "),
@@ -51940,6 +51970,22 @@ var render = function() {
                                       on: {
                                         click: function($event) {
                                           return _vm.verVenta(venta.id)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "icon-doc" })]
+                                  ),
+                                  _vm._v(
+                                    "  \n                                    "
+                                  ),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-info btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.pdfVenta(venta.id)
                                         }
                                       }
                                     },
