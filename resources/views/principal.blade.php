@@ -13,6 +13,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Icons -->
     <link href="css/plantilla.css" rel="stylesheet">
+    
+
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
@@ -72,14 +74,14 @@
         <div class="app-body">
 
             @if(Auth::check())
-                 @if (Auth::user()->idrol == 1)
-                     @include('plantilla.sidebaradministrador')
-                @elseif (Auth::user()->idrol == 2)
-                    @include('plantilla.sidebarvendedor')
-                @elseif (Auth::user()->idrol == 3)
-                    @include('plantilla.sidebaralmacenero')
-                @else
-                 @endif
+            @if (Auth::user()->idrol == 1)
+            @include('plantilla.sidebaradministrador')
+            @elseif (Auth::user()->idrol == 2)
+            @include('plantilla.sidebarvendedor')
+            @elseif (Auth::user()->idrol == 3)
+            @include('plantilla.sidebaralmacenero')
+            @else
+            @endif
             @endif
             <!-- Contenido Principal -->
             @yield('contenido')
